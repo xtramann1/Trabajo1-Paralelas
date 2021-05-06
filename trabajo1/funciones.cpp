@@ -22,6 +22,10 @@ se agregara a mas archivos ya que ya fue guardado.
 */
 
 string Matriz[15000][6];
+string Maximos[100][3];
+string Artisticos[100][3];
+string Humanismo[100][3];
+string Tecnico[100][3];
 
 void agregarAmatriz(){
     ifstream infile("estudiantes.csv");
@@ -89,50 +93,109 @@ void imprimir(){
 }
 
 // Agregar un int para seleccionar la columna a agregar
-void merge(int columna, int InicioIzq, int FinalIzq, int FinalDer){
-    int a, b, c, tamanoDer, tamanoIzq;
-    tamanoIzq = FinalIzq - InicioIzq + 1;
-    tamanoDer = FinalDer - FinalIzq;
-    string MatrizIzq[tamanoIzq][6];
-    string MatrizDer[tamanoDer][6];
-    for(a = 0; a < tamanoIzq; a++){
-        MatrizIzq[a][columna] = Matriz[InicioIzq+a][columna];
+void merge(int columna, int inicio, int mitad, int final){
+    int i,j,k;
+    int elementosIzq = mitad - inicio + 1;
+    int elementosDer = final - mitad;
+
+    string MI[elementosIzq][6];
+    string MD[elementosDer][6];
+
+    for(int i = 0; i < elementosIzq; i++){
+        MI[i][0] = Matriz[inicio+i][0];
+        MI[i][1] = Matriz[inicio+i][1];
+        MI[i][2] = Matriz[inicio+i][2];
+        MI[i][3] = Matriz[inicio+i][3];
+        MI[i][4] = Matriz[inicio+i][4];
+        MI[i][5] = Matriz[inicio+i][5];
     }
-    for(b = 0; b < tamanoDer; b++){
-        MatrizDer[b][columna] = Matriz[FinalIzq+1+b][columna];
+    for(int j = 0; j < elementosDer; j++){
+        MD[j][0] = Matriz[mitad + 1 + j][0];
+        MD[j][1] = Matriz[mitad + 1 + j][1];
+        MD[j][2] = Matriz[mitad + 1 + j][2];
+        MD[j][3] = Matriz[mitad + 1 + j][3];
+        MD[j][4] = Matriz[mitad + 1 + j][4];
+        MD[j][5] = Matriz[mitad + 1 + j][5];
     }
-    a = 0;
-    b = 0;
-    c = InicioIzq;
-    while(a<tamanoIzq && b<tamanoDer){
-        if(MatrizIzq[a][columna] <= MatrizDer[b][columna]){
-            Matriz[c][columna] = MatrizIzq[a][columna];
-            a++;
+
+    i = 0;
+    j = 0;
+    k = inicio;
+
+    while(i < elementosIzq && j < elementosDer){
+        if(MI[i][columna] <= MD[j][columna]){
+            Matriz[k][0] = MI[i][0];
+            Matriz[k][1] = MI[i][1];
+            Matriz[k][2] = MI[i][2];
+            Matriz[k][3] = MI[i][3];
+            Matriz[k][4] = MI[i][4];
+            Matriz[k][5] = MI[i][5];
+            i++;
+        }else{
+            Matriz[k][0] = MD[j][0];
+            Matriz[k][1] = MD[j][1];
+            Matriz[k][2] = MD[j][2];
+            Matriz[k][3] = MD[j][3];
+            Matriz[k][4] = MD[j][4];
+            Matriz[k][5] = MD[j][5];
+            j++;
         }
-        else{
-            Matriz[c][columna] = MatrizDer[b][columna];
-            b++;
-        }
-        c++;
+        k++;
     }
-    while(a<tamanoIzq){
-        Matriz[c][columna] = MatrizDer[a][columna];
-        a++;
-        c++;
+
+    while(j < elementosDer){
+        Matriz[k][0] = MD[j][0];
+        Matriz[k][1] = MD[j][1];
+        Matriz[k][2] = MD[j][2];
+        Matriz[k][3] = MD[j][3];
+        Matriz[k][4] = MD[j][4];
+        Matriz[k][5] = MD[j][5];
+        j++;
+        k++;
     }
-    while(b<tamanoDer){
-        Matriz[c][columna] = MatrizDer[b][columna];
-        b++;
-        c++;
+
+    while(i < elementosIzq){
+        Matriz[k][0] = MI[i][0];
+        Matriz[k][1] = MI[i][1];
+        Matriz[k][2] = MI[i][2];
+        Matriz[k][3] = MI[i][3];
+        Matriz[k][4] = MI[i][4];
+        Matriz[k][5] = MI[i][5];
+        i++;
+        k++;
     }
 }
 
 void mergesort(int columna, int InicioIzq, int FinalDer){
-    int FinalIzq;
     if(InicioIzq < FinalDer){
-        FinalIzq = InicioIzq+(FinalDer+InicioIzq)/2;
+        int FinalIzq = InicioIzq + ((FinalDer-InicioIzq)/2);
         mergesort(columna, InicioIzq, FinalIzq);
         mergesort(columna, FinalIzq+1, FinalDer);
         merge(columna, InicioIzq, FinalIzq, FinalDer);
+    }
+}
+
+void PasarMatriz(string matriz[][3], int columna){
+    mergesort(columna,0,14999);
+    int a=0,b=0;
+    while(a<100){
+        if(Matriz[14999-b][0] == "0"){
+            b++;
+        }
+        else{
+            matriz[a][0] = Matriz[14999-b][0];
+            matriz[a][1] = Matriz[14999-b][1];
+            matriz[a][2] = Matriz[14999-b][columna];
+            Matriz[14999-b][0] = "0";
+            a++;
+        }
+    }
+}
+
+void Acsv(string ArchivoCSV, string matriz[][3]){
+    ofstream archivo;
+    archivo.open("al/"+ArchivoCSV+".csv", ios::out | ios::app);
+    for(int i=0; i<100; i++){
+        archivo<<matriz[i][0]<<"; "<<matriz[i][1]<<"; "<<matriz[i][2]<<endl;
     }
 }

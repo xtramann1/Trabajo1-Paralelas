@@ -7,7 +7,13 @@ using namespace std;
 
 int main(int argc, char** argv){
     agregarAmatriz();
-    mergesort(3,0,14999);
-    imprimir();
+    PasarMatriz(Maximos,2);
+    PasarMatriz(Artisticos,3);
+    PasarMatriz(Humanismo,4);
+    PasarMatriz(Tecnico,5);
+    Acsv("maximos",Maximos);
+    Acsv("artistico",Artisticos);
+    Acsv("humanismo",Humanismo);
+    Acsv("tecnicos",Tecnico);
     return EXIT_SUCCESS;
 }
