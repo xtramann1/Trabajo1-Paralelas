@@ -5,6 +5,8 @@
 
 using namespace std;
 
+/* En esta parte se crean las matrices en el orden estipulado y posteriormente se realiza
+el traspaso de estas a un archivo csv cada una de ellas*/
 int main(int argc, char** argv){
     agregarAmatriz();
     PasarMatriz(Maximos,2);
@@ -15,5 +17,8 @@ int main(int argc, char** argv){
     Acsv("artistico",Artisticos);
     Acsv("humanismo",Humanismo);
     Acsv("tecnicos",Tecnico);
+    cout << "<<INTEGRANTES>>" << endl;
+    cout << "Felipe González Duarte" << endl << "Fabián Urriola Poisson";
+    cout << endl;
     return EXIT_SUCCESS;
 }

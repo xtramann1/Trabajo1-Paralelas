@@ -8,35 +8,39 @@
 
 using namespace std;
 
-/* se hace una matriz con 6 columnas, en la primera y segunda 
-va identificado el alumno, en la 3 el promedio maximo del alumno,
-en la 4 el promedio artistico, en la 5 el humanista y la sexta el
-tecnico, para crear los archivos se seleccionara las columnas (1,2,3)
-(1,2,4), (1,2,5) y (1,2,6) siendo asi cada archivo con 3 columnas   
-*/
-
-/*
-cuando se crea un archivo, al colocar cada estudiante en cada uno,
-se verificara con un cero, entonces si su indicador es cero no 
-se agregara a mas archivos ya que ya fue guardado.
-*/
-
+/* Inicialmente se declara una matriz principal con 6 columnas para guardar los datos 
+correspondientes para crear los archivos csv finales, en la primera y segunda columna 
+va identificado el alumno, en la 3 el promedio máximo del alumno,en la 4 el promedio artístico, 
+en la 5 el humanista y la sexta el técnico.*/
 string Matriz[15000][6];
+
+//Igualmente se declaran matrices para guardar los mejores 100 promedios de cada clasificación
 string Maximos[100][3];
 string Artisticos[100][3];
 string Humanismo[100][3];
 string Tecnico[100][3];
 
+/*En la siguiente función se comienza a agregar a la matriz princial (Matriz)
+a los alumnos con sus promedios correspondientes a cada clasificación, 
+al colocar cada estudiante se verificara con un cero, en otras palabras, 
+si su indicador es cero no se agregará nuevamente ninguna matriz ni archivo.
+
+Para la creación de la clasificación de los promedios de los alumnos se seleccionará
+las columnas (1,2,3) (1,2,4), (1,2,5) y (1,2,6) según corresponda,
+siendo asi cada matriz con 3 columnas*/
+
 void agregarAmatriz(){
     ifstream infile("estudiantes.csv");
     string line ="";
     string dato = "";
+    //Variables para determinar los promedios
     float sumaMaximos = 0;
     float sumaArtisticos = 0;
     float sumaHumanistas = 0;
     float sumaTecnicos = 0;
     float conversion = 0;
     int i = 0;
+    // Se busca los datos correspondientes a los alumnos para calcular los promedios
     while(i<15000){
         for(int j=0;j<10;j++){
             if(j == 9){
@@ -67,6 +71,8 @@ void agregarAmatriz(){
                 Matriz[i][j] = line;
             }
         }
+        /*Se guardan los datos obtenidos en la matriz principal, ordenados según 
+        el archivo "estudiantes.cvs"*/
         dato = to_string(sumaMaximos/8);
         Matriz[i][2] = dato;
         dato = to_string(sumaArtisticos/2);
@@ -83,16 +89,7 @@ void agregarAmatriz(){
     }
 }
 
-void imprimir(){
-    for(int i = 0; i < 10; i++){
-        for(int j = 0; j < 6; j++){
-            cout<<" "<<Matriz[i][j];
-        }
-        cout<<endl;
-    }
-}
-
-// Agregar un int para seleccionar la columna a agregar
+// Método de ordenamiento mergesort
 void merge(int columna, int inicio, int mitad, int final){
     int i,j,k;
     int elementosIzq = mitad - inicio + 1;
@@ -175,6 +172,7 @@ void mergesort(int columna, int InicioIzq, int FinalDer){
     }
 }
 
+//Función para traspasar los datos ordenados por promedios de mayor a menor
 void PasarMatriz(string matriz[][3], int columna){
     mergesort(columna,0,14999);
     int a=0,b=0;
@@ -192,6 +190,8 @@ void PasarMatriz(string matriz[][3], int columna){
     }
 }
 
+/*Transforma los datos correspondientes a una matriz con los mejores 100 promedios
+de ciertos alumnos a un archivo csv*/
 void Acsv(string ArchivoCSV, string matriz[][3]){
     ofstream archivo;
     archivo.open("al/"+ArchivoCSV+".csv", ios::out | ios::app);
